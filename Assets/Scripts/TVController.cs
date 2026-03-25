@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Video;
 
@@ -17,7 +18,6 @@ public class TVController : MonoBehaviour
 
     public void ToggleTV()
     {
-        Debug.Log("Turning TV Off");
         if (_isOn)
         {
             Debug.Log("Turning TV Off");
@@ -30,6 +30,7 @@ public class TVController : MonoBehaviour
         {
             _render.material = _onMaterial;
             _videoPlayer.Prepare();
+            _videoPlayer.Play();
             _isOn = true;
         }
     }
@@ -56,7 +57,17 @@ public class TVController : MonoBehaviour
     public void RestartVideo() 
     { 
         if (!_isOn) return;
+        
+        StartCoroutine(RestartCooldown());
+
+    }
+
+    IEnumerator RestartCooldown()
+    {
         _videoPlayer.Stop();
+        _render.material = _offMaterial;
+        yield return new WaitForSeconds(1f);
+
         _videoPlayer.Prepare();
         _videoPlayer.Play();
     }
