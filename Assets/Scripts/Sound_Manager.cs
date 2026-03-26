@@ -1,19 +1,29 @@
 using UnityEngine;
 
+public enum SoundType
+{
+    MAINMENU,
+    AMBIENCE,
+}
+
+[RequireComponent(typeof(AudioSource))]
 public class Sound_Manager : MonoBehaviour
 {
-
+    [SerializeField] private AudioClip[] soundList;
     public static Sound_Manager instance;
-    public AudioSource AudioSource;
-    public AudioClip AudioClip;
-    //private AudioSource AudioSource = new AudioSource[32];    // o gajo tinha isto mas tava a dar erro então nao sei logo ves se é preciso
-    public void PlayMainMenuMusic()
-    {
+    private AudioSource audioSource;
 
+    private void Awake()
+    {
+        instance = this;
     }
 
-    public void PlayAmbienceMusic()
+    private void Start()
     {
-
+        audioSource = GetComponent<AudioSource>();
+    }
+    public static void PlaySound(SoundType sound, float volume = 1)
+    {
+        instance.audioSource.PlayOneShot(instance.soundList[(int)sound], volume);
     }
 }
