@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 public enum SoundType
 {
     MAINMENU,
@@ -11,20 +10,32 @@ public enum SoundType
 public class SoundManager : MonoBehaviour
 {
     [SerializeField] private AudioClip[] soundList;
-    private static SoundManager instance;
-    public AudioSource audioSource;
+    [SerializeField] private AudioSource musicSource;
+
+    public static SoundManager Instance;
+
+    private AudioSource sfxSource;
 
     private void Awake()
     {
-        instance = this;
+        Instance = this;
+        sfxSource = GetComponent<AudioSource>();
     }
 
-    private void Start()
+    public static void PlaySound(SoundType sound, float volume = 1f)
     {
-        audioSource = GetComponent<AudioSource>();
+        Instance.sfxSource.PlayOneShot(Instance.soundList[(int)sound], volume);
     }
-    public static void PlaySound(SoundType sound, float volume = 1)
+    public void PlayMusic(SoundType sound, float volume = 1f)
     {
-        instance.audioSource.PlayOneShot(instance.soundList[(int)sound], volume);
-     }
+        Instance.musicSource.clip = Instance.soundList[(int)sound];
+        Instance.musicSource.loop = true;
+        Instance.musicSource.volume = volume;
+        Instance.musicSource.Play();
+    }
+
+    public void StopMusic(AudioSource audio)
+    {
+        audio.Stop();
+    }
 }
